@@ -13,6 +13,7 @@ public class MainActivity extends AppCompatActivity {
     MediaPlayer mediaPlayer;
     AudioManager audioManager;
 
+
     public void playFunc(View view){
 
     mediaPlayer.start();
@@ -33,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
         audioManager=(AudioManager)getSystemService(AUDIO_SERVICE);
 
         SeekBar volumeSeekBar=(SeekBar)findViewById(R.id.volumeSeekBar);
+        SeekBar scrubSeekBar=(SeekBar)findViewById(R.id.scrubSeekBar);
 
         final int maxVolume=audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
         int currentVolume=audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
@@ -56,6 +58,22 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        scrubSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                Log.i("Scrub changed",Integer.toString(i));
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
 
     }
 }
