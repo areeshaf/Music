@@ -8,6 +8,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.SeekBar;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 public class MainActivity extends AppCompatActivity {
 
     MediaPlayer mediaPlayer;
@@ -34,12 +37,14 @@ public class MainActivity extends AppCompatActivity {
         audioManager=(AudioManager)getSystemService(AUDIO_SERVICE);
 
         SeekBar volumeSeekBar=(SeekBar)findViewById(R.id.volumeSeekBar);
-        SeekBar scrubSeekBar=(SeekBar)findViewById(R.id.scrubSeekBar);
+        final SeekBar scrubSeekBar=(SeekBar)findViewById(R.id.scrubSeekBar);
 
         final int maxVolume=audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
         int currentVolume=audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
         volumeSeekBar.setMax(maxVolume);
         volumeSeekBar.setProgress(currentVolume);
+
+        scrubSeekBar.setMax(mediaPlayer.getDuration());
         volumeSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
@@ -62,6 +67,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
                 Log.i("Scrub changed",Integer.toString(i));
+
+                mediaPlayer.seekTo(i);
             }
 
             @Override
@@ -75,5 +82,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        new Timer().scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+
+                scrubSeekBar.setProgress(mediaPlayer.getCurrentPosition());
+            }
+        },0,2000);
     }
 }
